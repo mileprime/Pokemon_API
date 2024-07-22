@@ -1,20 +1,41 @@
 let list = document.getElementById("pok-list");
 
-let fetchPok_v2 = async () => {
-  let pokPromis = await fetch("https://pokeapi.co/api/v2/pokemon/").then(
-    (res) => {
+let fetchPok = async () => {
+  try {
+    let pokPromis = await fetch("https://pokeapi.co/api/v2/pokemon/").then(
+      (res) => {
+        return res.json();
+      }
+    );
+    return pokPromis;
+  } catch (error) {
+    return error;
+  }
+};
+
+let fetchUrl = async (url) => {
+  try {
+    let pokPromis = await fetch(url).then((res) => {
       return res.json();
-    }
-  );
-  return pokPromis;
+    });
+    return pokPromis;
+  } catch (error) {
+    return error;
+  }
 };
 
 window.onload = () => {
-  fetchPok_v2().then((data) => {
+  fetchPok().then((data) => {
     data.results.forEach((pok) => {
+      let img = document.createElement("img");
+      fetchUrl(pok.url).then((res) => {
+        img.src = res.sprites.front_default;
+      });
+
       let li = document.createElement("li");
       li.textContent = pok.name;
       list.appendChild(li);
+      li.appendChild(img);
       //add event listen to each li
       li.addEventListener("click", () => {
         console.log(pok);
